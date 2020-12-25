@@ -5,7 +5,7 @@ git push https://github.com/beans42/maze-solve-web.git master
 
 cd out
 git init
-git branch web
+git checkout -b web
 git add --all
 git commit -m "update"
 git push -f https://github.com/beans42/maze-solve-web.git web
