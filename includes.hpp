@@ -27,6 +27,7 @@ EM_JS(void, resize_canvas, (), { js_resize_canvas(); });
 EM_JS(void, file_dialog, (), { js_file_dialog(); });
 EM_JS(void, alert_popup, (const char* string, size_t length), { js_alert_popup(string, length); });
 EM_JS(void, open_url, (const char* string, size_t length), { js_open_url(string, length); });
+EM_JS(void, open_data_url, (const char* string, size_t length), { js_open_data_url(string, length); });
 
 template<int length>
 void alert(const char (&string)[length]) { alert_popup(string, length - 1); }

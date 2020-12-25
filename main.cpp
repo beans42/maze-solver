@@ -126,7 +126,7 @@ void loop() {
 					const auto png_in_mem = stbi_write_png_to_mem((uint8_t*)pixels.data(), g::pic_width * 4, g::pic_width, g::pic_height, 4, &png_mem_file_size);
 					const auto data_uri = std::string("data:image/png;base64,") + base64_encode((const char*)png_in_mem, png_mem_file_size);
 					free(png_in_mem);
-					open_url(data_uri.c_str(), data_uri.length());
+					open_data_url(data_uri.c_str(), data_uri.length());
 				}
 			}
 

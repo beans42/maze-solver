@@ -50,6 +50,9 @@
 				alert(arr_to_string(ptr, len));
 			}
 			function js_open_url(ptr, len) {
+				window.open(arr_to_string(ptr, len));
+			}
+			function js_open_data_url(ptr, len) {
 				window.open().document.write('<iframe src="' + arr_to_string(ptr, len) + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
 			}
 		</script>
