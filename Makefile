@@ -1,4 +1,4 @@
-OUT_DIR = docs
+OUT_DIR = out
 
 SOURCES = main.cpp
 SOURCES += imgui/imgui_impl_glfw.cpp imgui/imgui_impl_opengl3.cpp
