@@ -9,7 +9,7 @@ namespace g { //globals
 	int file_size = 0;
 
 	GLuint picture = 0;
-	int pic_width = 0, pic_height = 0;
+	unsigned pic_width = 0, pic_height = 0;
 
 	bool pic_chosen = false;
 	bool solved = false;
@@ -95,27 +95,24 @@ void loop() {
 			if (ImGui::Button("solve")) {
 				load_texture_from_file(g::file, g::file_size, &g::picture, &g::pic_width, &g::pic_height);
 				g::img->binarize_texture();
-				if (cost_map) {
-					const auto binary_maze = g::img->get_texture_as_bool_vector();
-					const auto temp = algo->get_cost_map(binary_maze, { g::pic_width, g::pic_height }, start, end);
-					g::img->darken_background();
-					g::img->draw_points(temp);
-				}
-				else {
-					const auto binary_maze = g::img->get_texture_as_bool_vector();
-					unsigned max_path_value;
-					const auto temp = algo->get_path(binary_maze, { g::pic_width, g::pic_height }, start, end, &max_path_value);
+				const auto binary_maze = g::img->get_texture_as_bool_vector();
+				const auto ret = algo->solve({ g::pic_width, g::pic_height, start, end, binary_maze });
+				if (ret.solved) {
 					std::vector<std::tuple<int, int, rgba_t>> points;
-					for (auto& point : temp) {
-						uint8_t r = uint8_t(std::get<2>(point) / (float)max_path_value * 255.f);
-						points.push_back({ std::get<0>(point), std::get<1>(point), path_value ?
-							rgba_t{ uint8_t(0xFF - r), r, 0x00, 0xFF } :
-							rgba_t{ uint8_t(path_cols[0] * 255.f), uint8_t(path_cols[1] * 255.f), uint8_t(path_cols[2] * 255.f), 0xFF } });
+					if (cost_map) {
+						
+					} else {
+						for (int i = 0; i < ret.path.size(); ++i) {
+							const auto r = uint8_t((float)i / (float)ret.path.size() * 255.f);
+							points.push_back({ ret.path[i].x, ret.path[i].y, path_value ?
+								rgba_t{ r, 0, uint8_t(0xFF - r), (uint8_t)0xFF } :
+								rgba_t{ uint8_t(path_cols[0] * 255.f), uint8_t(path_cols[1] * 255.f), uint8_t(path_cols[2] * 255.f), 0xFF } });
+						}
 					}
 					g::img->darken_background();
 					g::img->draw_points(points);
-				}
-				g::solved = true;
+					g::solved = true;
+				} else alert("no solution found");				
 			}
 
 			if (g::solved) {

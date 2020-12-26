@@ -10,7 +10,7 @@ constexpr rgba_t green = { 0x00, 0xFF, 0x00, 0xFF };
 class image_manip { //class for manipulating opengl textures
 	GLuint *m_texture_id = nullptr;
 	uint8_t* m_texture_buffer = nullptr;
-	int* m_width = nullptr, *m_height = nullptr;
+	unsigned* m_width = nullptr, *m_height = nullptr;
 	const static int m_channels = 4;
 	
 	void lock_texture() {
@@ -51,7 +51,7 @@ class image_manip { //class for manipulating opengl textures
 	}
 	
 public:
-	image_manip(GLuint *ptexture_id, int* width, int* height) : m_texture_id(ptexture_id), m_width(width), m_height(height) { }
+	image_manip(GLuint *ptexture_id, unsigned* width, unsigned* height) : m_texture_id(ptexture_id), m_width(width), m_height(height) { }
 
 	void binarize_texture(const int threshold = 200) {
 		lock_texture();
@@ -82,8 +82,11 @@ public:
 
 	void draw_points(const std::vector<std::tuple<int, int, rgba_t>>& pixels) {
 		lock_texture();
-		for (const auto& pixel : pixels)
+		for (const auto& pixel : pixels) {
+			if (std::get<0>(pixel) < 0 || std::get<0>(pixel) >= *m_width) continue;
+			if (std::get<1>(pixel) < 0 || std::get<1>(pixel) >= *m_height) continue;
 			set_pixel({ std::get<0>(pixel), std::get<1>(pixel) }, std::get<2>(pixel));
+		}
 		unlock_texture();
 	}
 

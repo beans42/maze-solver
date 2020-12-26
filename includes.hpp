@@ -17,9 +17,10 @@
 #include "stb/stb_image_write.h"
 
 #include <string>
-#include <thread>
 #include <vector>
 #include <queue>
+#include <deque>
+#include <tuple>
 
 EM_JS(int, canvas_get_width, (), { return Module.canvas.width; });
 EM_JS(int, canvas_get_height, (), { return Module.canvas.height; });
@@ -32,7 +33,30 @@ EM_JS(void, open_data_url, (const char* string, size_t length), { js_open_data_u
 template<int length>
 void alert(const char (&string)[length]) { alert_popup(string, length - 1); }
 
-struct point_t { int x, y; };
+struct point_t {
+	int x, y;
+	bool operator==(const point_t& other) const { return std::tie(x, y) == std::tie(other.x, other.y); }
+	auto neighbours(const int width, const int height) const {
+		std::vector<point_t> out;
+		if (x + 1 < width)  out.push_back({ x + 1, y });
+		if (y + 1 < height) out.push_back({ x, y + 1 });
+		if (x - 1 >= 0) out.push_back({ x - 1, y });
+		if (y - 1 >= 0) out.push_back({ x, y - 1 });
+		return out;
+	}
+};
+
+struct maze_t {
+	unsigned width, height;
+	point_t start, end;
+	std::vector<bool> grid;
+};
+
+struct ret_t {
+	bool solved;
+	std::vector<unsigned> cost_map;
+	std::vector<point_t> path;
+};
 
 struct rgba_t {
 	uint8_t r, g, b, a;
@@ -41,13 +65,9 @@ struct rgba_t {
 	}
 };
 
-struct solution_interface {
-	virtual std::vector<unsigned> calculate_path_values(const std::vector<bool>& binary_maze, point_t size, point_t start, point_t end, unsigned* max_path_value, bool* end_reached = nullptr) = 0;
-	virtual std::vector<std::tuple<int, int, rgba_t>> get_cost_map(const std::vector<bool>& binary_maze, point_t size, point_t start, point_t end) = 0;
-	virtual std::vector<std::tuple<int, int, unsigned>> get_path(const std::vector<bool>& binary_maze, point_t size, point_t start, point_t end, unsigned* max_path_value = nullptr) = 0;
-};
+struct solution_interface { virtual ret_t solve(const maze_t& maze) = 0; };
 
-bool load_texture_from_file(const uint8_t* buffer, const size_t size, GLuint* out_texture, int* out_width, int* out_height) {
+bool load_texture_from_file(const uint8_t* buffer, const size_t size, GLuint* out_texture, unsigned* out_width, unsigned* out_height) {
 	GLuint image_texture;
 	glGenTextures(1, &image_texture);
 	glBindTexture(GL_TEXTURE_2D, image_texture);
