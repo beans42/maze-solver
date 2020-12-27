@@ -102,9 +102,9 @@ void loop() {
 					if (cost_map) {
 						std::replace(ret.cost_map.begin(), ret.cost_map.end(), UINT_MAX, 0u);
 						const auto max_distance = *std::max_element(ret.cost_map.begin(), ret.cost_map.end());
-						const auto multiplier = 1 / (double)max_distance;
+						const auto multiplier = (double)1 / (double)max_distance;
 						for (int i = 0; i < ret.cost_map.size(); ++i) {
-							const auto color = uint8_t(255 * multiplier * ret.cost_map[i]);
+							const auto color = uint8_t((double)255 * (double)multiplier * (double)ret.cost_map[i]);
 							points.push_back({ i % g::pic_width, i / g::pic_width, {color, color, color, 0xFF} });
 						}
 					} else {
