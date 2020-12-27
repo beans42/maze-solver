@@ -11,7 +11,7 @@ EMCC_OPTS += -s EXPORTED_FUNCTIONS="['_main', '_update_file']"
 EMCC_OPTS += -s ALLOW_MEMORY_GROWTH=1
 
 all: $(SOURCES) 
-	emcc -o imgui.js -Iimgui $(SOURCES) -lGL $(EMCC_OPTS)
+	emcc -O2 -o imgui.js -Iimgui $(SOURCES) -lGL $(EMCC_OPTS)
 	rm -rf $(OUT_DIR)/*
 	mv imgui.js $(OUT_DIR)/imgui.js
 	mv imgui.wasm $(OUT_DIR)/imgui.wasm

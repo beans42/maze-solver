@@ -96,11 +96,17 @@ void loop() {
 				load_texture_from_file(g::file, g::file_size, &g::picture, &g::pic_width, &g::pic_height);
 				g::img->binarize_texture();
 				const auto binary_maze = g::img->get_texture_as_bool_vector();
-				const auto ret = algo->solve({ g::pic_width, g::pic_height, start, end, binary_maze });
+				auto ret = algo->solve({ g::pic_width, g::pic_height, start, end, binary_maze });
 				if (ret.solved) {
 					std::vector<std::tuple<int, int, rgba_t>> points;
 					if (cost_map) {
-						
+						std::replace(ret.cost_map.begin(), ret.cost_map.end(), UINT_MAX, 0u);
+						const auto max_distance = *std::max_element(ret.cost_map.begin(), ret.cost_map.end());
+						const auto multiplier = 1 / (double)max_distance;
+						for (int i = 0; i < ret.cost_map.size(); ++i) {
+							const auto color = uint8_t(255 * multiplier * ret.cost_map[i]);
+							points.push_back({ i % g::pic_width, i / g::pic_width, {color, color, color, 0xFF} });
+						}
 					} else {
 						for (int i = 0; i < ret.path.size(); ++i) {
 							const auto r = uint8_t((float)i / (float)ret.path.size() * 255.f);
@@ -112,7 +118,7 @@ void loop() {
 					g::img->darken_background();
 					g::img->draw_points(points);
 					g::solved = true;
-				} else alert("no solution found");				
+				} else alert("no solution found");
 			}
 
 			if (g::solved) {
