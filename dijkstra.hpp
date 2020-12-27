@@ -36,6 +36,7 @@ struct dijkstra : solution_interface {
 			}
 
 			for (const auto& v : current.pos.neighbours(maze.width, maze.height)) {
+				if (!maze.grid[idx(v)]) continue;
 				const auto new_distance = distances[idx(current.pos)] + 1;
 				if (new_distance < distances[idx(v)]) {
 					distances[idx(v)] = new_distance;
