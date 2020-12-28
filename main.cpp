@@ -135,6 +135,7 @@ void loop() {
 
 			ImGui::Separator();
 
+			ImGui::BeginChild("##maze display");
 			if (g::pic_chosen) {
 				g::img->draw_markers(start, end, marker_size);
 				if (show_whole_image) {
@@ -143,6 +144,7 @@ void loop() {
 					ImGui::GetCurrentContext()->CurrentWindow->DrawList->AddImage((void*)(intptr_t)g::picture, ImGui::GetCursorScreenPos(), ImVec2(pos.x + size.x - 5, pos.y + size.y - 5));
 				} else ImGui::Image((void*)g::picture, ImVec2((float)g::pic_width, (float)g::pic_height));
 			}
+			ImGui::EndChild();
 		}
 
 		ImGui::End();
