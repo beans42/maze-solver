@@ -1,7 +1,7 @@
 #include "includes.hpp"
 #include "image_manip.hpp"
-#include "dijkstra.hpp"
-#include "a_star.hpp"
+#include "algos/dijkstra.hpp"
+#include "algos/a_star.hpp"
 
 namespace g { //globals
 	GLFWwindow* window = nullptr;

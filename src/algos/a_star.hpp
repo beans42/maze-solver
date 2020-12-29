@@ -1,5 +1,5 @@
 #pragma once
-#include "includes.hpp"
+#include "../includes.hpp"
 
 struct a_star : solution_interface {
 	ret_t solve(const maze_t& maze) {
