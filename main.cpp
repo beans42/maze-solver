@@ -1,6 +1,7 @@
 #include "includes.hpp"
 #include "image_manip.hpp"
 #include "dijkstra.hpp"
+#include "a_star.hpp"
 
 namespace g { //globals
 	GLFWwindow* window = nullptr;
@@ -40,7 +41,7 @@ void loop() {
 	static int marker_size = 10;
 	static int chosen_algo = 0;
 	static solution_interface* algo = nullptr;
-	static solution_interface* algos[] = { new dijkstra };
+	static solution_interface* algos[] = { new dijkstra, new a_star };
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -78,7 +79,8 @@ void loop() {
 			ImGui::SliderInt("end x      ", &end.x, 0, g::pic_width - 1);
 			ImGui::SliderInt("end y      ", &end.y, 0, g::pic_height - 1);
 
-			ImGui::Combo("algorithm", &chosen_algo, "dijkstra's shortest path\0\0");
+			ImGui::RadioButton("dijkstra", &chosen_algo, 0); ImGui::SameLine();
+			ImGui::RadioButton("a* search", &chosen_algo, 1);
 			algo = algos[chosen_algo];
 
 			if (!cost_map) {
@@ -180,8 +182,6 @@ int main() {
 
 	ImGui_ImplGlfw_InitForOpenGL(g::window, false);
 	ImGui_ImplOpenGL3_Init();
-
-	ImGui::StyleColorsDark();
 
 	glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
 
