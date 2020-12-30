@@ -21,6 +21,7 @@
 #include <queue>
 #include <deque>
 #include <tuple>
+#include <stack>
 
 EM_JS(int, canvas_get_width, (), { return Module.canvas.width; });
 EM_JS(int, canvas_get_height, (), { return Module.canvas.height; });

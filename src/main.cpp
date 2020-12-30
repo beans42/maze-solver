@@ -1,7 +1,10 @@
 #include "includes.hpp"
 #include "image_manip.hpp"
+
 #include "algos/dijkstra.hpp"
 #include "algos/a_star.hpp"
+#include "algos/breadth_first.hpp"
+#include "algos/depth_first.hpp"
 
 namespace g { //globals
 	GLFWwindow* window = nullptr;
@@ -41,7 +44,7 @@ void loop() {
 	static int marker_size = 10;
 	static int chosen_algo = 0;
 	static solution_interface* algo = nullptr;
-	static solution_interface* algos[] = { new dijkstra, new a_star };
+	static solution_interface* algos[] = { new dijkstra, new a_star, new breadth_first, new depth_first };
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -80,7 +83,9 @@ void loop() {
 			ImGui::SliderInt("end y      ", &end.y, 0, g::pic_height - 1);
 
 			ImGui::RadioButton("dijkstra", &chosen_algo, 0); ImGui::SameLine();
-			ImGui::RadioButton("a* search", &chosen_algo, 1);
+			ImGui::RadioButton("a* search", &chosen_algo, 1); ImGui::SameLine();
+			ImGui::RadioButton("breadth first", &chosen_algo, 2); ImGui::SameLine();
+			ImGui::RadioButton("depth first", &chosen_algo, 3);
 			algo = algos[chosen_algo];
 
 			if (!cost_map) {
