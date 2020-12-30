@@ -63,7 +63,7 @@ void loop() {
 		ImGui::Text("maze solver");
 		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 50);
 		if (ImGui::Button("source")) {
-			const std::string url = "https://github.com/beans42/web-maze";
+			const std::string url = "https://github.com/beans42/maze-solver";
 			open_url(url.c_str(), url.length());
 		}
 		ImGui::Separator();
