@@ -68,7 +68,7 @@ void loop() {
 		}
 		ImGui::Separator();
 		
-		if (ImGui::Button("browse..."))
+		if (ImGui::Button("upload maze..."))
 			file_dialog();
 
 		if (g::pic_chosen) {
@@ -172,7 +172,7 @@ int main() {
 
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	g::window = glfwCreateWindow(800, 600, "web-gui demo", NULL, NULL);
+	g::window = glfwCreateWindow(800, 600, "maze solver web demo", NULL, NULL);
 	glfwMakeContextCurrent(g::window);
 
 	IMGUI_CHECKVERSION();
