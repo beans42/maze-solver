@@ -17,7 +17,7 @@ int main() {
 #endif
 	glfwInit();
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "web-gui demo", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 600, "maze solver native", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 
@@ -74,7 +74,7 @@ int main() {
 				ImGui::SetWindowPos(ImVec2(0, 0));
 			}
 
-			if (ImGui::Button("browse...")) {
+			if (ImGui::Button("upload maze...")) {
 				file_name = get_file_name();
 				if (file_name == "") {}
 				else if (!pic_chosen) {
