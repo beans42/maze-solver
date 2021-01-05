@@ -33,7 +33,6 @@ struct point_t {
 		if (y + 1 < height) out.push_back({ x, y + 1 });
 		if (x - 1 >= 0) out.push_back({ x - 1, y });
 		if (y - 1 >= 0) out.push_back({ x, y - 1 });
-
 #else
 		for (int y_offset = -1; y_offset <= 1; ++y_offset) {
 			for (int x_offset = -1; x_offset <= 1; ++x_offset) {
