@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+		<title>maze solver</title>
+		<style>
+			body { margin: 0; background-color: black }
+			.emscripten {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				margin: 0px;
+				border: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				display: block;
+				image-rendering: optimizeSpeed;
+				image-rendering: -moz-crisp-edges;
+				image-rendering: -o-crisp-edges;
+				image-rendering: -webkit-optimize-contrast;
+				image-rendering: optimize-contrast;
+				image-rendering: crisp-edges;
+				image-rendering: pixelated;
+				-ms-interpolation-mode: nearest-neighbor;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="file" accept="image/*" id="file_input" onchange="open_file(event)" style="display: none"/>
+		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+		<script type='text/javascript'>
+			var Module = { canvas: document.getElementById('canvas') };
+			window.addEventListener('resize', js_resize_canvas, false);
+			function js_resize_canvas() {
+				let canvas = document.getElementById('canvas');
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+			}
+			function open_file(e) {
+				const fileReader = new FileReader();
+				fileReader.onload = (event) => {
+					const uint8Arr = new Uint8Array(event.target.result);
+					const dataPtr = Module._malloc(uint8Arr.length);
+					const dataOnHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, uint8Arr.length);
+					dataOnHeap.set(uint8Arr);
+					const res = Module._update_file(dataOnHeap.byteOffset, uint8Arr.length);
+				};
+				fileReader.readAsArrayBuffer(e.target.files[0]);
+			}
+			function js_file_dialog() {
+				document.getElementById('file_input').click();
+			}
+			function arr_to_string(ptr, len) {
+				const view = new Uint8Array(Module.HEAPU8.buffer, ptr, len);
+				let string = '';
+				for (let i = 0; i < len; ++i)
+					string += String.fromCharCode(view[i]);
+				return string;
+			}
+			function js_alert_popup(ptr, len) {
+				alert(arr_to_string(ptr, len));
+			}
+			function js_open_url(ptr, len) {
+				window.open(arr_to_string(ptr, len));
+			}
+			function js_open_data_url(ptr, len) {
+				window.open().document.write('<iframe src="' + arr_to_string(ptr, len) + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+			}
+		</script>
+		<script async type="text/javascript" src="imgui.js"></script>
+	</body>
+</html>
